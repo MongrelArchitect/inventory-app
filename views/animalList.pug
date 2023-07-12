@@ -3,8 +3,8 @@ extends layout
 block content
   h1=title
   ul
-  each animal in animals
-    li
-      a(href=animal.url)=animal.commonName
-  else
-    li='no animals found'
+    each animal in animals
+      li
+        a(href=animal.url)=animal.commonName
+    else
+      li='no animals found'
