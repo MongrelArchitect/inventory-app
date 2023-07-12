@@ -11,6 +11,8 @@ const AnimalSchema = new Schema({
   speciesName: { required: true, type: String },
 });
 
-AnimalSchema.virtual('url').get(() => `/animals/${this._id}`);
+AnimalSchema.virtual('url').get(function () {
+  return `/animals/${this._id}`;
+});
 
 module.exports = mongoose.model('Animal', AnimalSchema);
