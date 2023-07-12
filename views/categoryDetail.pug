@@ -1,13 +1,18 @@
 extends layout
 
 block content
-  h1=category.name
-  div=category.description
-  figure
-    figcaption Creatures
+  if category
+    h1=category.name
+    div=category.description
+    figure
+      figcaption Creatures
+      ul
+        each animal in animals
+          li
+            a(href=animal.url)=animal.commonName
+        else
+          li='No animals in stock'
+  else
+    h1 No Category Found
     ul
-      each animal in animals
-        li
-          a(href=animal.url)=animal.commonName
-      else
-        li='No animals in stock'
+      li No category with requested id #{id}

@@ -17,8 +17,10 @@ exports.animalDetail = asyncHandler(async (req, res, next) => {
     const animal = await Animal
       .findOne({ _id: req.params.id })
       .populate('category', 'name url');
+    // need id parameter if we got a valid id but no animial found
     res.render('animalDetail', { animal, id: req.params.id });
   } else {
+    // invalid id in the url
     res.render('animalDetail', { id: req.params.id });
   }
 });
