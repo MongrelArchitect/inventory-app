@@ -1,4 +1,5 @@
 const asyncHandler = require('express-async-handler');
+const { ObjectId } = require('mongoose').Types;
 const Animal = require('../models/animal');
 require('../models/category');
 
@@ -12,8 +13,12 @@ exports.animalList = asyncHandler(async (req, res, next) => {
 
 // display individual animal detail
 exports.animalDetail = asyncHandler(async (req, res, next) => {
-  const animal = await Animal
-    .findOne({ _id: req.params.id })
-    .populate('category', 'name url');
-  res.render('animalDetail', { animal });
+  if (ObjectId.isValid(req.params.id)) {
+    const animal = await Animal
+      .findOne({ _id: req.params.id })
+      .populate('category', 'name url');
+    res.render('animalDetail', { animal, id: req.params.id });
+  } else {
+    res.render('animalDetail', { id: req.params.id });
+  }
 });
