@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1=animal.commonName
+  ul
+    li=animal.speciesName
+    li
+      a(href=animal.category.url)=animal.category.name
+    li=animal.description
+    li=`${animal.numberInStock} in stock`
+    li=`\$${animal.price}.00 each`
