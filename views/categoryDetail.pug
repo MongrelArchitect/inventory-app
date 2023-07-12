@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1=category.name
+  div=category.description
+  figure
+    figcaption Creatures
+    ul
+      each animal in animals
+        li
+          a(href=animal.url)=animal.commonName
+      else
+        li='No animals in stock'

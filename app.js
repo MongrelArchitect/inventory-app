@@ -10,6 +10,7 @@ require('dotenv').config();
 // import local modules
 const indexRouter = require('./routes/index');
 const animalsRouter = require('./routes/animals');
+const categoryRouter = require('./routes/categories');
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // routes
 app.use('/', indexRouter);
 app.use('/animals', animalsRouter);
+app.use('/categories', categoryRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

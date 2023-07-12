@@ -1,6 +1,5 @@
 const express = require('express');
 
-// controller modules
 const animalController = require('../controllers/animalController');
 
 const router = express.Router();

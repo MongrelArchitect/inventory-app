@@ -3,7 +3,7 @@
 }
 
 body {
-  background: #ccc;
+  background: #008080;
   font-family: sans-serif;
 }
 
@@ -12,7 +12,6 @@ a {
 }
 
 .container {
-  background: #008080;
   color: #eef;
   display: grid;
   gap: 8px;
