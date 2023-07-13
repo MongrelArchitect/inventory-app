@@ -4,14 +4,14 @@ const { Schema } = mongoose;
 
 const AnimalSchema = new Schema({
   category: { ref: 'Category', type: Schema.Types.ObjectId },
-  commonName: { required: true, type: String },
+  commonName: { minLength: 2, required: true, type: String },
   description: String,
   numberInStock: { min: 0, required: true, type: Number },
   price: { min: 0, required: true, type: Number },
-  speciesName: { required: true, type: String },
+  speciesName: { minLength: 5, required: true, type: String },
 });
 
-AnimalSchema.virtual('url').get(function () {
+AnimalSchema.virtual('url').get(function getAnimalURL() {
   return `/animals/${this._id}`;
 });
 

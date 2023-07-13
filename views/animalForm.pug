@@ -4,66 +4,94 @@ block content
   h1=title
   form(action='' method='POST')
     ul
+      div Fields marked with * are required
       li
-        label(for='commonName') Common Name:
+        label(for='commonName') *Common Name:
           input(
             id='commonName' 
+            minLength='2'
             name='commonName' 
+            required
             type='text' 
-            value=commonName || ''
+            value=animal && animal.commonName || ''
           )
+          div.error=errors && errors.commonName ? errors.commonName.msg : ''
       li
-        label(for='speciesName') Species Name:
+        label(for='speciesName') *Species Name:
           input(
             id='speciesName' 
+            minLength='5'
             name='speciesName' 
+            required
             type='text' 
-            value=speciesName || ''
+            value=animal && animal.speciesName || ''
           )
+          div.error=errors && errors.speciesName ? errors.speciesName.msg : ''
       li
         label(for='description') Description:
           textarea(
             id='description'
             name='description'
-            value=description || ''
-          )
+          )=animal && animal.description || ''
+          div.error=errors && errors.description ? errors.description.msg : ''
       li
-        label(for='category') Category:
+        label(for='category') *Category:
           if categories.length
             select(
               id='category'
               name='category'
+              required
             )
+              option(
+                value=''
+              )='SELECT ONE'
               each categoryOption in categories
-                if category && category === categoryOption
+                //- break apart the conditional for brevity
+                - if (animal) {
+                  //- using var since const would be block scoped
+                  - var animalString = animal.category.toString()
+                  - var categoryString = categoryOption._id.toString()
+                - }
+                if animal && animalString === categoryString
                   option(
                     selected=true
-                    value=categoryOption.name
+                    value=categoryOption._id
                   )=categoryOption.name
                 else
                   option(
-                    value=categoryOption.name
+                    value=categoryOption._id
                   )=categoryOption.name
           else
             div No categories found. Please
             a(href='/categories/new') create a new category
+          div.error=errors && errors.category ? errors.category.msg : ''
       li
-        label(for='price') Price Per Individual:
+        label(for='price') *Price Per Individual:
           input(
             id='price'
             min='0'
             name='price'
+            required
             type='number'
-            value=price || 0
+            value=animal && animal.price || 0
           )
+          div.error=errors && errors.price ? errors.price.msg : ''
       li
-        label(for='numberInStock') Number In Stock:
+        label(for='numberInStock') *Number In Stock:
           input(
             id='numberInStock'
             min='0'
             name='numberInStock'
+            required
+            step='1'
             type='number'
-            value=numberInStock || 0
+            value=animal && animal.numberInStock || 0
             )
+          //- break apart the ternary for brevity
+          - if (errors) {
+            //- using var since const would be block scoped
+            - var stockError = errors.numberInStock
+          - }
+          div.error=errors && stockError ? stockError.msg : ''
       li
         button(type='submit') Submit

@@ -10,6 +10,9 @@ router.get('/', animalController.animalList);
 // new animal form GET
 router.get('/new', animalController.getNewAnimalForm);
 
+// new animal form POST
+router.post('/new', animalController.postNewAnimalForm);
+
 // individual animal detail
 router.get('/:id', animalController.animalDetail);
 
