@@ -4,10 +4,10 @@ const { Schema } = mongoose;
 
 const CategorySchema = new Schema({
   description: String,
-  name: { required: true, type: String },
+  name: { minLength: 2, required: true, type: String },
 });
 
-CategorySchema.virtual('url').get(function () {
+CategorySchema.virtual('url').get(function getCategoryURL() {
   return `/categories/${this._id}`;
 });
 

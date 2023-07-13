@@ -26,3 +26,7 @@ exports.categoryDetail = asyncHandler(async (req, res, next) => {
     res.render('categoryDetail', { id: req.params.id });
   }
 });
+
+exports.getNewCategoryForm = asyncHandler(async (req, res, next) => {
+  res.render('categoryForm', { title: 'New Category' });
+});
