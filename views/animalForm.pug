@@ -1,0 +1,69 @@
+extends layout
+
+block content
+  h1=title
+  form(action='' method='POST')
+    ul
+      li
+        label(for='commonName') Common Name:
+          input(
+            id='commonName' 
+            name='commonName' 
+            type='text' 
+            value=commonName || ''
+          )
+      li
+        label(for='speciesName') Species Name:
+          input(
+            id='speciesName' 
+            name='speciesName' 
+            type='text' 
+            value=speciesName || ''
+          )
+      li
+        label(for='description') Description:
+          textarea(
+            id='description'
+            name='description'
+            value=description || ''
+          )
+      li
+        label(for='category') Category:
+          if categories.length
+            select(
+              id='category'
+              name='category'
+            )
+              each categoryOption in categories
+                if category && category === categoryOption
+                  option(
+                    selected=true
+                    value=categoryOption.name
+                  )=categoryOption.name
+                else
+                  option(
+                    value=categoryOption.name
+                  )=categoryOption.name
+          else
+            div No categories found. Please
+            a(href='/categories/new') create a new category
+      li
+        label(for='price') Price Per Individual:
+          input(
+            id='price'
+            min='0'
+            name='price'
+            type='number'
+            value=price || 0
+          )
+      li
+        label(for='numberInStock') Number In Stock:
+          input(
+            id='numberInStock'
+            min='0'
+            name='numberInStock'
+            type='number'
+            value=numberInStock || 0
+            )
+      li
+        button(type='submit') Submit
