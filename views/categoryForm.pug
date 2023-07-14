@@ -9,8 +9,11 @@ block content
         label(for='name') *Name:
           input(
             id='name'
+            minLength='2'
             name='name'
+            required
             type='text'
+            value=category ? category.name : ''
           )
           div.error=errors && errors.name ? errors.name.msg : ''
       li
@@ -18,7 +21,7 @@ block content
           textarea(
             id='description'
             name='description'
-          )
+          )=category ? category.description : ''
           div.error=errors && errors.description ? errors.description.msg : ''
       li
         button(type='submit') Submit
