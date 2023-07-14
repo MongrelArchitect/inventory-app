@@ -99,4 +99,5 @@ block content
           - }
           div.error=errors && stockError ? stockError.msg : ''
       li
+        div.error=errors && errors.id ? errors.id.msg : ''
         button(type='submit') Submit

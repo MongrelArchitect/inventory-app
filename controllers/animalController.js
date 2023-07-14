@@ -147,7 +147,7 @@ exports.postEditAnimal = [
         res.render('animalForm', {
           animal,
           categories,
-          errors: { category: { msg: 'Invalid animal id' } },
+          errors: { id: { msg: 'Invalid animal id' } },
           title: 'Edit Animal',
         });
       }
