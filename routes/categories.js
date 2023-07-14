@@ -20,7 +20,7 @@ router.get('/:id', categoryController.categoryDetail);
 router.get('/:id/delete', categoryController.getDeleteCategory);
 
 // delete category detail POST
-router.post('/;id/delete', categoryController.postDeleteCategory);
+router.post('/:id/delete', categoryController.postDeleteCategory);
 
 // edit category detail GET
 router.get('/:id/edit', categoryController.getCategoryEdit);

@@ -134,9 +134,52 @@ exports.postCategoryEdit = [
 ];
 
 // POST delete category
-exports.postDeleteCategory = (req, res, next) => {
-  res.send('postDeleteCategory');
-};
+exports.postDeleteCategory = [
+  body('id', 'Invalid category id')
+    .trim()
+    .escape()
+    .custom((value) => {
+      // make sure we're using a legit mongodb _id in our form
+      if (ObjectId.isValid(value)) {
+        return true;
+      }
+      return false;
+    }),
+
+  // process reques after validation
+  asyncHandler(async (req, res, next) => {
+    // extract any errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // we don't have a legit mongodb _id
+      res.render('categoryDelete', { id: req.body.id });
+    } else {
+      // _id is legit, make sure the category actually exists
+      const categoryToDelete = await Category.findById(req.body.id);
+      if (categoryToDelete) {
+        // it's in our database, now make sure it has no animals
+        const animals = await Animal.find({ category: req.body.id });
+        if (animals.length) {
+          // still has animals - rerender the form accordingly
+          res.render('categoryDelete', { animals, categoryToDelete });
+        } else {
+          // no animals in our category, so try to delete it
+          const deletedCategory = await Category.findByIdAndDelete(req.body.id);
+          if (deletedCategory) {
+            // success! redirect to the category list
+            res.redirect('/categories');
+          } else {
+            // something went wrong with deleting...rerender the page
+            res.render('categoryDelete', { id: req.body.id });
+          }
+        }
+      } else {
+        // the _id looks legit but is not in our database
+        res.render('categoryDelete', { id: req.body.id });
+      }
+    }
+  }),
+];
 
 // post request to new category form
 exports.postNewCategoryForm = [

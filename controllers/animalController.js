@@ -90,7 +90,7 @@ exports.postDeleteAnimal = [
 
     if (!errors.isEmpty()) {
       // we don't have a legit mongodb _id
-      res.render('animalDelete', { id: req.params.id });
+      res.render('animalDelete', { id: req.body.id });
     } else {
       // _id is legit, try to delete it
       const deletedAnimal = await Animal.findByIdAndDelete(req.body.id);
