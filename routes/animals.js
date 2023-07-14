@@ -16,6 +16,12 @@ router.post('/new', animalController.postNewAnimalForm);
 // individual animal detail
 router.get('/:id', animalController.animalDetail);
 
+// delete animal detail GET
+router.get('/:id/delete', animalController.getDeleteAnimal);
+
+// delete animal detail POST
+router.post('/:id/delete', animalController.postDeleteAnimal);
+
 // edit animal detail GET
 router.get('/:id/edit', animalController.getEditAnimal);
 

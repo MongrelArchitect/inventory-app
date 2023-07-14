@@ -12,6 +12,8 @@ block content
       li=`\$${animal.price}.00 each`
       li
         a(href=`/animals/${animal._id}/edit`) Edit
+      li
+        a(href=`/animals/${animal._id}/delete`) Delete
   if !animal
     h1 Animal Not Found
     ul

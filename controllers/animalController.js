@@ -28,6 +28,23 @@ exports.animalDetail = asyncHandler(async (req, res, next) => {
   }
 });
 
+// delete animal GET
+exports.getDeleteAnimal = asyncHandler(async (req, res, next) => {
+  if (ObjectId.isValid(req.params.id)) {
+    // our id parameter looks like a legit mongodb _id
+    const animal = await Animal.findById(req.params.id);
+    if (animal) {
+      res.render('animalDelete', { animal });
+    } else {
+      // no such _id in our database
+      res.render('animalDelete', { id: req.params.id });
+    }
+  } else {
+    // not a legit mongodb _id
+    res.render('animalDelete', { id: req.params.id });
+  }
+});
+
 // edit animal detail
 exports.getEditAnimal = asyncHandler(async (req, res, next) => {
   if (ObjectId.isValid(req.params.id)) {
@@ -52,6 +69,41 @@ exports.getNewAnimalForm = asyncHandler(async (req, res, next) => {
   const categories = await Category.find({}, 'name');
   res.render('animalForm', { categories, title: 'New Animal' });
 });
+
+// delete animal POST
+exports.postDeleteAnimal = [
+  body('id', 'Invalid animal id')
+    .trim()
+    .escape()
+    .custom((value) => {
+      // make sure we're using a legit mongodb _id in our form
+      if (ObjectId.isValid(value)) {
+        return true;
+      }
+      return false;
+    }),
+
+  // process reques after validation
+  asyncHandler(async (req, res, next) => {
+    // extract any errors
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // we don't have a legit mongodb _id
+      res.render('animalDelete', { id: req.params.id });
+    } else {
+      // _id is legit, try to delete it
+      const deletedAnimal = await Animal.findByIdAndDelete(req.body.id);
+      if (deletedAnimal) {
+        // success - redirect to the list of all animals
+        res.redirect('/animals');
+      } else {
+        // _id looked legit but not in our database
+        res.render('animalDelete', { id: req.body.id });
+      }
+    }
+  }),
+];
 
 // post request to edit animal form
 exports.postEditAnimal = [
