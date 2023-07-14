@@ -4,8 +4,11 @@ block content
   if category
     h1=category.name
     div=category.description
-    div
-      a(href=`/categories/${category._id}/edit`) Edit
+    ul
+      li
+        a(href=`/categories/${category._id}/edit`) Edit
+      li
+        a(href=`/categories/${category._id}/delete`) Delete 
     figure
       figcaption Creatures
       ul

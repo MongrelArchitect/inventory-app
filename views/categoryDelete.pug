@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  if !id
+    h1=`Delete "${category.name}" Category`
+    if animals.length
+      p Delete the following animals before attempting to delete this category:
+      ul
+        each animal in animals
+          li
+            a(href=animal.url)=animal.commonName
+    else
+      p Do you really want to delete this category?
+      form(method='POST' action='')
+        input(
+          type='hidden'
+          name='id'
+          required='true'
+          value=category._id
+        )
+        div=errors ? errors.id.msg : ''
+        button(type='submit')=`Delete ${category.name}`
+  else
+    h1 Category Not Found
+    div No category found with id #{id}

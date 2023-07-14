@@ -50,6 +50,22 @@ exports.getCategoryEdit = asyncHandler(async (req, res, next) => {
   }
 });
 
+// GET delete category
+exports.getDeleteCategory = asyncHandler(async (req, res, next) => {
+  if (ObjectId.isValid(req.params.id)) {
+    // id parameter looks like a legit mongodb _id
+    const category = await Category.findById(req.params.id, 'name');
+    if (category) {
+      // _id is in our database, so get all its animals & render form
+      const animals = await Animal.find({ category: req.params.id });
+      res.render('categoryDelete', { animals, category });
+    }
+  } else {
+    // not a legit mongodb _id
+    res.render('categoryDelete', { id: req.params.id });
+  }
+});
+
 // show new category form
 exports.getNewCategoryForm = (req, res, next) => {
   res.render('categoryForm', { title: 'New Category' });
@@ -116,6 +132,11 @@ exports.postCategoryEdit = [
     }
   }),
 ];
+
+// POST delete category
+exports.postDeleteCategory = (req, res, next) => {
+  res.send('postDeleteCategory');
+};
 
 // post request to new category form
 exports.postNewCategoryForm = [
