@@ -49,8 +49,13 @@ block content
                 //- break apart the conditional for brevity
                 - if (animal) {
                   //- using var since const would be block scoped
-                  - var animalString = animal.category.toString()
-                  - var categoryString = categoryOption._id.toString()
+                  - var categoryString = categoryOption._id.toString();
+                  //- might have an invalid mongodb _id
+                  - if (animal.category) {
+                    - var animalString = animal.category.toString();
+                  - } else {
+                    - var animalString = undefined;
+                  - }
                 - }
                 if animal && animalString === categoryString
                   option(

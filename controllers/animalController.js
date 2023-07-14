@@ -49,7 +49,16 @@ exports.postNewAnimalForm = [
 
   body('description').optional().trim().escape(),
 
-  body('category').trim().escape(),
+  body('category', 'Invalid category id')
+    .trim()
+    .escape()
+    .custom((value) => {
+      // make sure we have a valid mongodb _id
+      if (ObjectId.isValid(value)) {
+        return true;
+      }
+      return false;
+    }),
 
   body('price', 'Price must be 0 or larger')
     .trim()
@@ -95,17 +104,31 @@ exports.postNewAnimalForm = [
       // form data is valid
 
       // check if the species is already in our database
-      const animalExists = await Animal
-        .findOne({ speciesName: req.body.speciesName })
+      const animalExists = await Animal.findOne({
+        speciesName: req.body.speciesName,
+      })
         // we have a case-insensitive index in our database
         .collation({ locale: 'en', strength: 1 });
       if (animalExists) {
         // already in our inventory, redirect to its detail page
         res.redirect(animalExists.url);
       } else {
-        // save our new animal and redirect to its detail page
-        await animal.save();
-        res.redirect(animal.url);
+        // make sure we weren't given a legit-looking but bogus category _id
+        const legitCategory = await Category.findById(animal.category);
+        if (!legitCategory) {
+          // catgory _id is no good, re-render form
+          const categories = await Category.find({}, 'name');
+          res.render('animalForm', {
+            animal,
+            categories,
+            errors: { category: { msg: 'Invalid category id' } },
+            title: 'New Animal',
+          });
+        } else {
+          // save our new animal and redirect to its detail page
+          await animal.save();
+          res.redirect(animal.url);
+        }
       }
     }
   }),
