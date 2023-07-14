@@ -1,27 +1,32 @@
 extends layout
 
 block content
-  h1=title
-  form(action='' method='POST')
-    ul
-      div Fields marked with * are required
-      li
-        label(for='name') *Name:
-          input(
-            id='name'
-            minLength='2'
-            name='name'
-            required
-            type='text'
-            value=category ? category.name : ''
-          )
-          div.error=errors && errors.name ? errors.name.msg : ''
-      li
-        label(for='description') Description:
-          textarea(
-            id='description'
-            name='description'
-          )=category ? category.description : ''
-          div.error=errors && errors.description ? errors.description.msg : ''
-      li
-        button(type='submit') Submit
+  if !id 
+    h1=title
+    form(action='' method='POST')
+      ul
+        div Fields marked with * are required
+        li
+          label(for='name') *Name:
+            input(
+              id='name'
+              minLength='2'
+              name='name'
+              required
+              type='text'
+              value=category ? category.name : ''
+            )
+            div.error=errors && errors.name ? errors.name.msg : ''
+        li
+          label(for='description') Description:
+            textarea(
+              id='description'
+              name='description'
+            )=category ? category.description : ''
+            div.error=errors && errors.description ? errors.description.msg : ''
+        li
+          div.error=errors && errors.id ? errors.id.msg : ''
+          button(type='submit') Submit
+  else
+    h1 No Category Found
+    div No category with requested id #{id}

@@ -4,6 +4,8 @@ block content
   if category
     h1=category.name
     div=category.description
+    div
+      a(href=`/categories/${category._id}/edit`) Edit
     figure
       figcaption Creatures
       ul

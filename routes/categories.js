@@ -16,4 +16,10 @@ router.post('/new', categoryController.postNewCategoryForm);
 // individual category detail
 router.get('/:id', categoryController.categoryDetail);
 
+// edit category detail GET
+router.get('/:id/edit', categoryController.getCategoryEdit);
+
+// edit category detail GET
+router.post('/:id/edit', categoryController.postCategoryEdit);
+
 module.exports = router;
