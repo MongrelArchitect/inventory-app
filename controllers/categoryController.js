@@ -30,14 +30,22 @@ exports.categoryDetail = asyncHandler(async (req, res, next) => {
 
 // GET category edit form
 exports.getCategoryEdit = asyncHandler(async (req, res, next) => {
-  const category = await Category.findById(req.params.id);
-  if (category) {
-    res.render('categoryForm', {
-      category,
-      editing: true,
-      title: 'Edit Category',
-    });
+  if (ObjectId.isValid(req.params.id)) {
+    // our id parameter looks like a legit mongodb _id
+    const category = await Category.findById(req.params.id);
+    // check if our id parameter matches a legit category
+    if (category) {
+      res.render('categoryForm', {
+        category,
+        editing: true,
+        title: 'Edit Category',
+      });
+    } else {
+      // looked like a good _id but not in our database
+      res.render('categoryForm', { id: req.params.id });
+    }
   } else {
+    // not a valid mongodb _id
     res.render('categoryForm', { id: req.params.id });
   }
 });

@@ -30,9 +30,21 @@ exports.animalDetail = asyncHandler(async (req, res, next) => {
 
 // edit animal detail
 exports.getEditAnimal = asyncHandler(async (req, res, next) => {
-  const categories = await Category.find({}, 'name');
-  const animal = await Animal.findById(req.params.id);
-  res.render('animalForm', { animal, categories, title: 'Edit Animal' });
+  if (ObjectId.isValid(req.params.id)) {
+    // our id parameter looks like a legit mongodb _id
+    const categories = await Category.find({}, 'name');
+    const animal = await Animal.findById(req.params.id);
+    // check to make sure the id pararmeter matches an actual animal
+    if (animal) {
+      res.render('animalForm', { animal, categories, title: 'Edit Animal' });
+    } else {
+      // looked like a good id but it wasn't in our database
+      res.render('animalForm', { id: req.params.id });
+    }
+  } else {
+    // not a valid mongodb _id
+    res.render('animalForm', { id: req.params.id });
+  }
 });
 
 // show new animal form

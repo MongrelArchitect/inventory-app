@@ -1,103 +1,107 @@
 extends layout
 
 block content
-  h1=title
-  form(action='' method='POST')
-    ul
-      div Fields marked with * are required
-      li
-        label(for='commonName') *Common Name:
-          input(
-            id='commonName' 
-            minLength='2'
-            name='commonName' 
-            required
-            type='text' 
-            value=animal && animal.commonName || ''
-          )
-          div.error=errors && errors.commonName ? errors.commonName.msg : ''
-      li
-        label(for='speciesName') *Species Name:
-          input(
-            id='speciesName' 
-            minLength='5'
-            name='speciesName' 
-            required
-            type='text' 
-            value=animal && animal.speciesName || ''
-          )
-          div.error=errors && errors.speciesName ? errors.speciesName.msg : ''
-      li
-        label(for='description') Description:
-          textarea(
-            id='description'
-            name='description'
-          )=animal && animal.description || ''
-          div.error=errors && errors.description ? errors.description.msg : ''
-      li
-        label(for='category') *Category:
-          if categories.length
-            select(
-              id='category'
-              name='category'
+  if !id
+    h1=title
+    form(action='' method='POST')
+      ul
+        div Fields marked with * are required
+        li
+          label(for='commonName') *Common Name:
+            input(
+              id='commonName' 
+              minLength='2'
+              name='commonName' 
               required
+              type='text' 
+              value=animal && animal.commonName || ''
             )
-              option(
-                value=''
-              )='SELECT ONE'
-              each categoryOption in categories
-                //- break apart the conditional for brevity
-                - if (animal) {
-                  //- using var since const would be block scoped
-                  - var categoryString = categoryOption._id.toString();
-                  //- might have an invalid mongodb _id
-                  - if (animal.category) {
-                    - var animalString = animal.category.toString();
-                  - } else {
-                    - var animalString = undefined;
+            div.error=errors && errors.commonName ? errors.commonName.msg : ''
+        li
+          label(for='speciesName') *Species Name:
+            input(
+              id='speciesName' 
+              minLength='5'
+              name='speciesName' 
+              required
+              type='text' 
+              value=animal && animal.speciesName || ''
+            )
+            div.error=errors && errors.speciesName ? errors.speciesName.msg : ''
+        li
+          label(for='description') Description:
+            textarea(
+              id='description'
+              name='description'
+            )=animal && animal.description || ''
+            div.error=errors && errors.description ? errors.description.msg : ''
+        li
+          label(for='category') *Category:
+            if categories.length
+              select(
+                id='category'
+                name='category'
+                required
+              )
+                option(
+                  value=''
+                )='SELECT ONE'
+                each categoryOption in categories
+                  //- break apart the conditional for brevity
+                  - if (animal) {
+                    //- using var since const would be block scoped
+                    - var categoryString = categoryOption._id.toString();
+                    //- might have an invalid mongodb _id
+                    - if (animal.category) {
+                      - var animalString = animal.category.toString();
+                    - } else {
+                      - var animalString = undefined;
+                    - }
                   - }
-                - }
-                if animal && animalString === categoryString
-                  option(
-                    selected=true
-                    value=categoryOption._id
-                  )=categoryOption.name
-                else
-                  option(
-                    value=categoryOption._id
-                  )=categoryOption.name
-          else
-            div No categories found. Please
-            a(href='/categories/new') create a new category
-          div.error=errors && errors.category ? errors.category.msg : ''
-      li
-        label(for='price') *Price Per Individual:
-          input(
-            id='price'
-            min='0'
-            name='price'
-            required
-            type='number'
-            value=animal && animal.price || 0
-          )
-          div.error=errors && errors.price ? errors.price.msg : ''
-      li
-        label(for='numberInStock') *Number In Stock:
-          input(
-            id='numberInStock'
-            min='0'
-            name='numberInStock'
-            required
-            step='1'
-            type='number'
-            value=animal && animal.numberInStock || 0
+                  if animal && animalString === categoryString
+                    option(
+                      selected=true
+                      value=categoryOption._id
+                    )=categoryOption.name
+                  else
+                    option(
+                      value=categoryOption._id
+                    )=categoryOption.name
+            else
+              div No categories found. Please
+              a(href='/categories/new') create a new category
+            div.error=errors && errors.category ? errors.category.msg : ''
+        li
+          label(for='price') *Price Per Individual:
+            input(
+              id='price'
+              min='0'
+              name='price'
+              required
+              type='number'
+              value=animal && animal.price || 0
             )
-          //- break apart the ternary for brevity
-          - if (errors) {
-            //- using var since const would be block scoped
-            - var stockError = errors.numberInStock
-          - }
-          div.error=errors && stockError ? stockError.msg : ''
-      li
-        div.error=errors && errors.id ? errors.id.msg : ''
-        button(type='submit') Submit
+            div.error=errors && errors.price ? errors.price.msg : ''
+        li
+          label(for='numberInStock') *Number In Stock:
+            input(
+              id='numberInStock'
+              min='0'
+              name='numberInStock'
+              required
+              step='1'
+              type='number'
+              value=animal && animal.numberInStock || 0
+              )
+            //- break apart the ternary for brevity
+            - if (errors) {
+              //- using var since const would be block scoped
+              - var stockError = errors.numberInStock
+            - }
+            div.error=errors && stockError ? stockError.msg : ''
+        li
+          div.error=errors && errors.id ? errors.id.msg : ''
+          button(type='submit') Submit
+  else
+    h1 No Animal Found
+    div No animal with id #{id}
