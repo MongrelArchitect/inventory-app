@@ -16,4 +16,10 @@ router.post('/new', animalController.postNewAnimalForm);
 // individual animal detail
 router.get('/:id', animalController.animalDetail);
 
+// edit animal detail GET
+router.get('/:id/edit', animalController.getEditAnimal);
+
+// edit animal detail POST
+router.post('/:id/edit', animalController.postEditAnimal);
+
 module.exports = router;

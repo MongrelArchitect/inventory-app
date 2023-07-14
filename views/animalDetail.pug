@@ -10,6 +10,8 @@ block content
       li=animal.description
       li=`${animal.numberInStock} in stock`
       li=`\$${animal.price}.00 each`
+      li
+        a(href=`/animals/${animal._id}/edit`) Edit
   if !animal
     h1 Animal Not Found
     ul
