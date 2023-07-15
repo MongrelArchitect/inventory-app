@@ -30,16 +30,12 @@ CategorySchema.statics.updateAnimalCount = async function updateCount() {
   ]);
 
   // Update the animalCount field in each Category document
-  // XXX
-  // eslint-disable-next-line
-  for (const category of categoryCount) {
-  // XXX
-  // eslint-disable-next-line
+  categoryCount.forEach(async (category) => {
     await this.updateOne(
       { _id: category._id },
       { animalCount: category.animalCount },
     );
-  }
+  });
 };
 
 module.exports = mongoose.model('Category', CategorySchema);
