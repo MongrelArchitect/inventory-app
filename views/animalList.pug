@@ -8,3 +8,5 @@ block content
         a(href=animal.url)=animal.commonName
     else
       li='no animals found'
+  div=`${getTotalAnimals(animals).toLocaleString()} in stock`
+  div=`${formatPrice(getTotalValue(animals))} total`

@@ -5,21 +5,37 @@ const Animal = require('../models/animal');
 const Category = require('../models/category');
 require('../models/category');
 
+const formatPrice = (price) => price.toLocaleString('en-US', {
+  style: 'currency',
+  currency: 'USD',
+});
+
+const getTotalAnimals = (animals) => {
+  const total = animals.reduce((acc, curr) => acc + curr.numberInStock, 0);
+  return total;
+};
+
+const getTotalValue = (animals) => animals.reduce((acc, curr) => {
+  const value = acc + curr.numberInStock * curr.price;
+  return value;
+}, 0);
+
 // display list of animals
 exports.animalList = asyncHandler(async (req, res, next) => {
-  const allAnimals = await Animal.find({}, 'commonName url').sort({
+  const allAnimals = await Animal.find({}).sort({
     commonName: 1,
   });
-  res.render('animalList', { animals: allAnimals, title: 'All Animals' });
+  res.render('animalList', {
+    animals: allAnimals,
+    formatPrice,
+    getTotalAnimals,
+    getTotalValue,
+    title: 'All Animals',
+  });
 });
 
 // display individual animal detail
 exports.animalDetail = asyncHandler(async (req, res, next) => {
-  const formatPrice = (price) => price.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
   if (ObjectId.isValid(req.params.id)) {
     const animal = await Animal.findOne({ _id: req.params.id }).populate(
       'category',
