@@ -6,10 +6,11 @@ const Animal = require('../models/animal');
 
 // display all categories
 exports.categoryList = asyncHandler(async (req, res, next) => {
-  const allCategories = await Category.find({});
+  await Category.updateAnimalCount();
+  const allCategories = await Category.find({}, 'animalCount name');
   res.render('categoryList', {
     categories: allCategories,
-    title: 'Creature Categories',
+    title: 'Categories',
   });
 });
 

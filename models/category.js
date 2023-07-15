@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const CategorySchema = new Schema({
+  animalCount: { type: Number, default: 0 },
   description: String,
   name: { minLength: 2, required: true, type: String },
 });
@@ -10,5 +11,35 @@ const CategorySchema = new Schema({
 CategorySchema.virtual('url').get(function getCategoryURL() {
   return `/categories/${this._id}`;
 });
+
+CategorySchema.statics.updateAnimalCount = async function updateCount() {
+  const categoryCount = await this.aggregate([
+    {
+      $lookup: {
+        from: 'animals',
+        localField: '_id',
+        foreignField: 'category',
+        as: 'animals',
+      },
+    },
+    {
+      $set: {
+        animalCount: { $size: '$animals' },
+      },
+    },
+  ]);
+
+  // Update the animalCount field in each Category document
+  // XXX
+  // eslint-disable-next-line
+  for (const category of categoryCount) {
+  // XXX
+  // eslint-disable-next-line
+    await this.updateOne(
+      { _id: category._id },
+      { animalCount: category.animalCount },
+    );
+  }
+};
 
 module.exports = mongoose.model('Category', CategorySchema);
