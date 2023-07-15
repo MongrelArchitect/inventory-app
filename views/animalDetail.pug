@@ -8,8 +8,9 @@ block content
       li
         a(href=animal.category.url)=animal.category.name
       li=animal.description
-      li=`${animal.numberInStock} in stock`
-      li=`\$${animal.price}.00 each`
+      li=`${animal.numberInStock.toLocaleString()} in stock`
+      li=`${formatPrice(animal.price)} each`
+      li=`${formatPrice(animal.numberInStock * animal.price)} total`
       li
         a(href=`/animals/${animal._id}/edit`) Edit
       li

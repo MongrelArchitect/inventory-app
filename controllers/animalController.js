@@ -15,13 +15,18 @@ exports.animalList = asyncHandler(async (req, res, next) => {
 
 // display individual animal detail
 exports.animalDetail = asyncHandler(async (req, res, next) => {
+  const formatPrice = (price) => price.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
   if (ObjectId.isValid(req.params.id)) {
     const animal = await Animal.findOne({ _id: req.params.id }).populate(
       'category',
       'name url',
     );
     // need id parameter if we got a valid id but no animial found
-    res.render('animalDetail', { animal, id: req.params.id });
+    res.render('animalDetail', { animal, formatPrice, id: req.params.id });
   } else {
     // invalid id in the url
     res.render('animalDetail', { id: req.params.id });
