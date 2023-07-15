@@ -168,10 +168,11 @@ exports.postEditAnimal = [
     .escape()
     .custom((value) => {
       // check if the value is a non-negativ int or float
-      if (!+value || +value < 0) {
-        return false;
+      const regex = /^(0|[1-9]\d*)(\.\d+)?$/;
+      if (regex.test(value)) {
+        return true;
       }
-      return true;
+      return false;
     }),
 
   body('numberInStock', 'Stock must be a whole number, 0 or larger')
@@ -271,10 +272,11 @@ exports.postNewAnimalForm = [
     .escape()
     .custom((value) => {
       // check if the value is a non-negativ int or float
-      if (!+value || +value < 0) {
-        return false;
+      const regex = /^(0|[1-9]\d*)(\.\d+)?$/;
+      if (regex.test(value)) {
+        return true;
       }
-      return true;
+      return false;
     }),
 
   body('numberInStock', 'Stock must be a whole number, 0 or larger')
