@@ -7,7 +7,11 @@ block content
       li=animal.speciesName
       li
         a(href=animal.category.url)=animal.category.name
-      li=animal.description
+      if animal.description
+        li=animal.description
+      if animal.image
+        li
+          img(alt=animal.commonName src=`/images/${animal.image}`)
       li=`${animal.numberInStock.toLocaleString()} in stock`
       li=`${formatPrice(animal.price)} each`
       li=`${formatPrice(animal.numberInStock * animal.price)} total`
