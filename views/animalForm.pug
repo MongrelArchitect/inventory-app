@@ -3,7 +3,7 @@ extends layout
 block content
   if !id
     h1=title
-    form(action='' method='POST')
+    form(action='' enctype='multipart/form-data' method='POST')
       ul
         div Fields marked with * are required
         li
@@ -100,6 +100,14 @@ block content
               - var stockError = errors.numberInStock
             - }
             div.error=errors && stockError ? stockError.msg : ''
+        li
+          label(for='image') Image:
+            input(
+              accept='image/png, image/jpeg, image/gif'
+              id='image'
+              name='image'
+              type='file'
+            )
         li
           div.error=errors && errors.id ? errors.id.msg : ''
           button(type='submit') Submit

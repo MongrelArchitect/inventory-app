@@ -1,9 +1,17 @@
+const fs = require('fs');
 const asyncHandler = require('express-async-handler');
 const { body, param, validationResult } = require('express-validator');
 const { ObjectId } = require('mongoose').Types;
+const multer = require('multer');
 const Animal = require('../models/animal');
 const Category = require('../models/category');
 require('../models/category');
+
+const deleteFile = (filePath) => {
+  fs.unlink(filePath, (err) => {
+    if (err) console.error(err);
+  });
+};
 
 const formatPrice = (price) => price.toLocaleString('en-US', {
   style: 'currency',
@@ -19,6 +27,32 @@ const getTotalValue = (animals) => animals.reduce((acc, curr) => {
   const value = acc + curr.numberInStock * curr.price;
   return value;
 }, 0);
+
+const moveFile = (filename) => {
+  const oldPath = `temp/${filename}`;
+  const newPath = `public/images/${filename}`;
+  fs.rename(oldPath, newPath, (err) => {
+    if (err) console.error(err);
+  });
+};
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: 'temp/',
+    filename: function createFilename(req, file, cb) {
+      cb(null, `${Date.now()}-${file.originalname}`);
+    },
+  }),
+  limits: { fileSize: 5242880 },
+  fileFilter: function filterFile(req, file, cb) {
+    const allowed = ['image/jpeg', 'image/png', 'image/gif'];
+    if (allowed.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Unsupported filetype for new animal image'));
+    }
+  },
+});
 
 // display list of animals
 exports.animalList = asyncHandler(async (req, res, next) => {
@@ -243,6 +277,9 @@ exports.postEditAnimal = [
 
 // post request to new animal form
 exports.postNewAnimalForm = [
+  // for multer file upload
+  upload.single('image'),
+
   // validate & sanitize user input
   body('commonName', 'Common name must contain at least 2 characters')
     .trim()
@@ -291,17 +328,20 @@ exports.postNewAnimalForm = [
 
     // create an animal object with escaped and trimmed data
     const animal = new Animal({
-      commonName: req.body.commonName,
-      speciesName: req.body.speciesName,
-      description: req.body.description,
       category: req.body.category,
-      price: +req.body.price,
+      commonName: req.body.commonName,
+      description: req.body.description,
+      image: req.file ? req.file.filename : '',
       numberInStock: +req.body.numberInStock,
+      price: +req.body.price,
+      speciesName: req.body.speciesName,
     });
 
     if (!errors.isEmpty()) {
-      // got some errors - render the form again with sanitized data
+      // temp image not needed, so delete it
+      deleteFile(req.file.path);
       const categories = await Category.find({}, 'name');
+      // render the form again with sanitized data (except file input)
       res.render('animalForm', {
         animal,
         categories,
@@ -319,12 +359,18 @@ exports.postNewAnimalForm = [
         .collation({ locale: 'en', strength: 1 });
       if (animalExists) {
         // already in our inventory, redirect to its detail page
+        if (animal.image) {
+          // temp image not needed, so delete it
+          deleteFile(req.file.path);
+        }
         res.redirect(animalExists.url);
       } else {
         // make sure we weren't given a legit-looking but bogus category _id
         const legitCategory = await Category.findById(animal.category);
         if (!legitCategory) {
-          // catgory _id is no good, re-render form
+          // temp image not needed, so delete it
+          deleteFile(req.file.path);
+          // catgory _id is no good, re-render form (except file input)
           const categories = await Category.find({}, 'name');
           res.render('animalForm', {
             animal,
@@ -333,6 +379,8 @@ exports.postNewAnimalForm = [
             title: 'New Animal',
           });
         } else {
+          // move the uploaded image from temp to public/images
+          if (animal.image) moveFile(animal.image);
           // save our new animal and redirect to its detail page
           await animal.save();
           res.redirect(animal.url);
