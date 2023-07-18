@@ -24,7 +24,7 @@ block content
           required='true'
           value=category._id
         )
-        div=errors ? errors.id.msg : ''
+        div=errors && errors.password ? errors.password.msg : ''
         button(type='submit')=`Delete ${category.name}`
   else
     h1 Category Not Found

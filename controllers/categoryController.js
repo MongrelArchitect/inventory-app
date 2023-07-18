@@ -93,11 +93,10 @@ exports.postCategoryEdit = [
 
   body('description').optional().trim().escape(),
 
-  body('password', 'Admin password required')
-    .custom((value) => {
-      if (value === process.env.PASSWORD) return true;
-      return false;
-    }),
+  body('password', 'Admin password required').custom((value) => {
+    if (value === process.env.PASSWORD) return true;
+    return false;
+  }),
 
   // process request after validation
   asyncHandler(async (req, res, next) => {
@@ -156,15 +155,30 @@ exports.postDeleteCategory = [
       return false;
     }),
 
+  body('password', 'Admin password required').custom((value) => {
+    if (value === process.env.PASSWORD) return true;
+    return false;
+  }),
+
   // process reques after validation
   asyncHandler(async (req, res, next) => {
     // extract any errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      // we don't have a legit mongodb _id
-      res.render('categoryDelete', { id: req.body.id });
-      // check for correct admin password
-    } else if (req.body.password === process.env.PASSWORD) {
+      if (errors.mapped().password) {
+        // admin password isn't legit
+        const categoryToDelete = await Category.findById(req.body.id);
+        const animals = await Animal.find({ category: req.body.id });
+        res.render('categoryDelete', {
+          animals,
+          errors: errors.mapped(),
+          category: categoryToDelete,
+        });
+      } else {
+        // we don't have a legit mongodb _id
+        res.render('categoryDelete', { id: req.body.id });
+      }
+    } else {
       // _id is legit, make sure the category actually exists
       const categoryToDelete = await Category.findById(req.body.id);
       if (categoryToDelete) {
@@ -188,9 +202,6 @@ exports.postDeleteCategory = [
         // the _id looks legit but is not in our database
         res.render('categoryDelete', { id: req.body.id });
       }
-    } else {
-      // password not legit - redirect
-      res.render('authDenied');
     }
   }),
 ];
