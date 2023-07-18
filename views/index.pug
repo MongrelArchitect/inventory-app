@@ -2,4 +2,12 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p= description
+  h2 Inventory Management
+  if categoryCount
+    p=`${categoryCount} categories`
+    if speciesCount
+      p=`${speciesCount} species`
+    if animalCount
+      p=`${animalCount.toLocaleString()} animals`
+      p=`${totalValue} total`
