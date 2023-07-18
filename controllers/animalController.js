@@ -156,7 +156,10 @@ exports.postDeleteAnimal = [
       // _id is legit, try to delete it
       const deletedAnimal = await Animal.findByIdAndDelete(req.body.id);
       if (deletedAnimal) {
-        // success - redirect to the list of all animals
+        // success - delete any associated image and redirect to animal list
+        if (deletedAnimal.image) {
+          deleteFile(`public/images/${deletedAnimal.image}`);
+        }
         res.redirect('/animals');
       } else {
         // _id looked legit but not in our database
