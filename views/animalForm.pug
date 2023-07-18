@@ -2,6 +2,7 @@ extends layout
 
 block content
   if !id
+    script(src='/javascripts/editImage.js' defer='true')
     h1=title
     form(action='' enctype='multipart/form-data' method='POST')
       ul
@@ -101,13 +102,25 @@ block content
             - }
             div.error=errors && stockError ? stockError.msg : ''
         li
-          label(for='image') Image:
-            input(
-              accept='image/png, image/jpeg, image/gif'
-              id='image'
-              name='image'
-              type='file'
-            )
+          div Current Image:
+          if animal && animal.image
+            div.filename=animal.image
+            img.preview(alt=animal.commonName src=`/images/${animal.image}`)
+          else
+            div.filename None
+            img.preview(alt='No image' src='/images/no-image.svg')
+          div
+            label(for='image') New Image:
+              input.edit-image(
+                accept='image/png, image/jpeg, image/gif'
+                id='image'
+                name='image'
+                type='file'
+              )
+          button(
+            class=animal && animal.image ? 'delete-image' : 'delete-image hidden' 
+            type='button'
+          ) Delete image
         li
           div.error=errors && errors.id ? errors.id.msg : ''
           button(type='submit') Submit

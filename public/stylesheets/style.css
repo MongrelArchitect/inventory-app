@@ -17,3 +17,11 @@ a {
   gap: 8px;
   grid-template-columns: auto 1fr;
 }
+
+.hidden {
+  visibility: hidden;
+}
+
+.preview {
+  height: 200px;
+}
