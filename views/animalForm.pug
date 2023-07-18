@@ -102,6 +102,9 @@ block content
             - }
             div.error=errors && stockError ? stockError.msg : ''
         li
+          //- tells the server if user changed the image - frontend script
+          //- changes value to '1' if user has clicked to delete or change image
+          input(class='changed' name='imageChanged' type='hidden' value='0')
           div Current Image:
           if animal && animal.image
             div.filename=animal.image
@@ -110,11 +113,13 @@ block content
             div.filename None
             img.preview(alt='No image' src='/images/no-image.svg')
           div
-            label(for='image') New Image:
+            label.edit-image-label(
+              for=editing ? 'image-editing' : 'image'
+            ) New Image:
               input.edit-image(
                 accept='image/png, image/jpeg, image/gif'
-                id='image'
-                name='image'
+                id=editing ? 'image-editing' : 'image'
+                name=editing ? 'image-editing' : 'image'
                 type='file'
               )
           button(

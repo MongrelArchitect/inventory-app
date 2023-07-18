@@ -108,7 +108,13 @@ exports.getEditAnimal = asyncHandler(async (req, res, next) => {
     const animal = await Animal.findById(req.params.id);
     // check to make sure the id pararmeter matches an actual animal
     if (animal) {
-      res.render('animalForm', { animal, categories, title: 'Edit Animal' });
+      res.render('animalForm', {
+        animal,
+        categories,
+        // need template to know if we're editing to handle file input
+        editing: true,
+        title: 'Edit Animal',
+      });
     } else {
       // looked like a good id but it wasn't in our database
       res.render('animalForm', { id: req.params.id });
@@ -162,6 +168,9 @@ exports.postDeleteAnimal = [
 
 // post request to edit animal form
 exports.postEditAnimal = [
+  // for multer file upload
+  upload.single('image'),
+
   // validate & sanitize user input
   param('id', 'Invalid animal id')
     .trim()
@@ -222,15 +231,18 @@ exports.postEditAnimal = [
     // create an animal object with escaped and trimmed data
     const animal = new Animal({
       _id: req.params.id,
-      commonName: req.body.commonName,
-      speciesName: req.body.speciesName,
-      description: req.body.description,
       category: req.body.category,
-      price: +req.body.price,
+      commonName: req.body.commonName,
+      description: req.body.description,
       numberInStock: +req.body.numberInStock,
+      price: +req.body.price,
+      speciesName: req.body.speciesName,
     });
 
     if (!errors.isEmpty()) {
+      // temp image not needed, so delete it
+      deleteFile(req.file.path);
+
       // got some errors - render the form again with sanitized data
       const categories = await Category.find({}, 'name');
       res.render('animalForm', {
@@ -248,25 +260,43 @@ exports.postEditAnimal = [
         // make sure we weren't given a legit-looking but bogus category _id
         const legitCategory = await Category.findById(animal.category);
         if (!legitCategory) {
+          // temp image not needed, so delete it
+          deleteFile(req.file.path);
           // catgory _id is no good, re-render form
           const categories = await Category.find({}, 'name');
           res.render('animalForm', {
             animal,
             categories,
+            editing: true,
             errors: { category: { msg: 'Invalid category id' } },
             title: 'Edit Animal',
           });
         } else {
+          // this is taken from a hidden input that front-end script
+          // changes from '0' to '1' if the user deletes or changes image
+          if (+req.body.imageChanged) {
+            // if user changed the image, use the new choice & delete old image
+            animal.image = req.file ? req.file.filename : '';
+            deleteFile(`public/images/${checkAnimal.image}`);
+            // move the uploaded image from temp to public/images
+            if (animal.image) moveFile(animal.image);
+          } else {
+            // otherwise refer to the original document
+            animal.image = checkAnimal.image;
+          }
           // save our new animal and redirect to its detail page
           const newAnimal = await Animal.findByIdAndUpdate(animal._id, animal);
           res.redirect(newAnimal.url);
         }
       } else {
+        // temp image not needed, so delete it
+        deleteFile(req.file.path);
         // animal _id is not in our database - rerender form
         const categories = await Category.find({}, 'name');
         res.render('animalForm', {
           animal,
           categories,
+          editing: true,
           errors: { id: { msg: 'Invalid animal id' } },
           title: 'Edit Animal',
         });
@@ -340,8 +370,9 @@ exports.postNewAnimalForm = [
     if (!errors.isEmpty()) {
       // temp image not needed, so delete it
       deleteFile(req.file.path);
-      const categories = await Category.find({}, 'name');
+
       // render the form again with sanitized data (except file input)
+      const categories = await Category.find({}, 'name');
       res.render('animalForm', {
         animal,
         categories,
