@@ -11,6 +11,10 @@ a {
   color: #ffd700;
 }
 
+.animal-image {
+  height: 400px;
+}
+
 .container {
   color: #eef;
   display: grid;
