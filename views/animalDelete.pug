@@ -18,7 +18,7 @@ block content
         required='true'
         value=animal._id
       )
-      div=errors ? errors.id.msg : ''
+      div=errors && errors.password ? errors.password.msg : ''
       button(type='submit')=`Delete ${animal.speciesName}`
   else
     h1 Animal Not Found

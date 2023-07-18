@@ -144,16 +144,27 @@ exports.postDeleteAnimal = [
       return false;
     }),
 
+  body('password', 'Admin password required')
+    .custom((value) => {
+      if (value === process.env.PASSWORD) return true;
+      return false;
+    }),
+
   // process reques after validation
   asyncHandler(async (req, res, next) => {
     // extract any errors
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      // we don't have a legit mongodb _id
-      res.render('animalDelete', { id: req.body.id });
-      // check for admin password
-    } else if (req.body.password === process.env.PASSWORD) {
+      if (errors.mapped().password) {
+        // admin password no good
+        const animal = await Animal.findById(req.body.id);
+        res.render('animalDelete', { animal, errors: errors.mapped() });
+      } else {
+        // we don't have a legit mongodb _id
+        res.render('animalDelete', { id: req.body.id });
+      }
+    } else {
       // _id is legit, try to delete it
       const deletedAnimal = await Animal.findByIdAndDelete(req.body.id);
       if (deletedAnimal) {
@@ -166,9 +177,6 @@ exports.postDeleteAnimal = [
         // _id looked legit but not in our database
         res.render('animalDelete', { id: req.body.id });
       }
-    } else {
-      // password not legit - redirect
-      res.render('authDenied');
     }
   }),
 ];
