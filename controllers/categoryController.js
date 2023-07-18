@@ -85,11 +85,19 @@ exports.postCategoryEdit = [
       }
       return false;
     }),
+
   body('name', 'Name must contain at least 2 characters')
     .trim()
     .isLength({ min: 2 })
     .escape(),
+
   body('description').optional().trim().escape(),
+
+  body('password', 'Admin password required')
+    .custom((value) => {
+      if (value === process.env.PASSWORD) return true;
+      return false;
+    }),
 
   // process request after validation
   asyncHandler(async (req, res, next) => {
@@ -107,6 +115,7 @@ exports.postCategoryEdit = [
       // got some errors - render the form again with sanitized data
       res.render('categoryForm', {
         category,
+        editing: true,
         errors: errors.mapped(),
         title: 'Edit Category',
       });

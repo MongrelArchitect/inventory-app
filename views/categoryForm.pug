@@ -24,6 +24,15 @@ block content
               name='description'
             )=category ? category.description : ''
             div.error=errors && errors.description ? errors.description.msg : ''
+        if editing
+          li
+            label(for='password') *Admin password 
+              input(
+                id='password'
+                name='password'
+                type='password'
+              )
+              div.error=errors && errors.password ? errors.password.msg : ''
         li
           div.error=errors && errors.id ? errors.id.msg : ''
           button(type='submit') Submit
