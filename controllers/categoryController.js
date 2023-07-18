@@ -154,7 +154,8 @@ exports.postDeleteCategory = [
     if (!errors.isEmpty()) {
       // we don't have a legit mongodb _id
       res.render('categoryDelete', { id: req.body.id });
-    } else {
+      // check for correct admin password
+    } else if (req.body.password === process.env.PASSWORD) {
       // _id is legit, make sure the category actually exists
       const categoryToDelete = await Category.findById(req.body.id);
       if (categoryToDelete) {
@@ -178,6 +179,9 @@ exports.postDeleteCategory = [
         // the _id looks legit but is not in our database
         res.render('categoryDelete', { id: req.body.id });
       }
+    } else {
+      // password not legit - redirect
+      res.render('authDenied');
     }
   }),
 ];

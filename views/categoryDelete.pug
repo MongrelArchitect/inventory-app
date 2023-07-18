@@ -10,8 +10,14 @@ block content
           li
             a(href=animal.url)=animal.commonName
     else
-      p Do you really want to delete this category?
+      p Are you sure? Enter admin password to confirm.
       form(method='POST' action='')
+        label(for='password') Password Required:
+          input(
+            type='password'
+            required
+            name='password'
+          )
         input(
           type='hidden'
           name='id'
