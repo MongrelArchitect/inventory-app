@@ -230,6 +230,12 @@ exports.postEditAnimal = [
     .escape()
     .isInt({ min: 0 }),
 
+  body('password', 'Admin password required')
+    .custom((value) => {
+      if (value === process.env.PASSWORD) return true;
+      return false;
+    }),
+
   // process request after validation
   asyncHandler(async (req, res, next) => {
     // extract any errors
@@ -248,13 +254,14 @@ exports.postEditAnimal = [
 
     if (!errors.isEmpty()) {
       // temp image not needed, so delete it
-      deleteFile(req.file.path);
+      if (req.file) deleteFile(req.file.path);
 
       // got some errors - render the form again with sanitized data
       const categories = await Category.find({}, 'name');
       res.render('animalForm', {
         animal,
         categories,
+        editing: true,
         errors: errors.mapped(),
         title: 'Edit Animal',
       });
