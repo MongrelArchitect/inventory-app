@@ -4,8 +4,14 @@ block content
   if !id
     h1=`Delete ${animal.commonName}`
       div=`(${animal.speciesName})`
-    p Do you really want to delete this animal?
+      p Are you sure? Enter admin password to confirm.
     form(method='POST' action='')
+      label(for='password') Password Required:
+        input(
+          type='password'
+          required
+          name='password'
+        )
       input(
         type='hidden'
         name='id'

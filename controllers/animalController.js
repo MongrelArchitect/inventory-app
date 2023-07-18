@@ -152,7 +152,8 @@ exports.postDeleteAnimal = [
     if (!errors.isEmpty()) {
       // we don't have a legit mongodb _id
       res.render('animalDelete', { id: req.body.id });
-    } else {
+      // check for admin password
+    } else if (req.body.password === process.env.PASSWORD) {
       // _id is legit, try to delete it
       const deletedAnimal = await Animal.findByIdAndDelete(req.body.id);
       if (deletedAnimal) {
@@ -165,6 +166,9 @@ exports.postDeleteAnimal = [
         // _id looked legit but not in our database
         res.render('animalDelete', { id: req.body.id });
       }
+    } else {
+      // password not legit - redirect
+      res.render('authDenied');
     }
   }),
 ];
