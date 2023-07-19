@@ -1,13 +1,13 @@
 extends layout
 
 block content
-  h1= title
   p= description
   h2 Inventory Management
+  ul
   if categoryCount
-    p=`${categoryCount} categories`
+    li.mono=`${categoryCount} categories`
     if speciesCount
-      p=`${speciesCount} species`
+      li.mono=`${speciesCount} species`
     if animalCount
-      p=`${animalCount.toLocaleString()} animals`
-      p=`${totalValue} total`
+      li.mono=`${animalCount.toLocaleString()} animals`
+      li.mono=`${totalValue} total`

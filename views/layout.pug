@@ -7,6 +7,8 @@ html
     meta(name='viewport', content='width=device-width, initial-scale=1')
   body
     .container
+      include header.pug
       include sidebar.pug
-      article.content
+      article
         block content
+      include footer.pug

@@ -2,9 +2,10 @@ extends layout
 
 block content
   if animal
-    h1=animal.commonName
+    h2=animal.commonName
     ul
-      li=animal.speciesName
+      li
+        i=animal.speciesName
       if animal.image
         li
           img.animal-image(alt=animal.commonName src=`/images/${animal.image}`)
@@ -12,14 +13,14 @@ block content
         a(href=animal.category.url)=animal.category.name
       if animal.description
         li=animal.description
-      li=`${animal.numberInStock.toLocaleString()} in stock`
-      li=`${formatPrice(animal.price)} each`
-      li=`${formatPrice(animal.numberInStock * animal.price)} total`
+      li.mono=`${animal.numberInStock.toLocaleString()} in stock`
+      li.mono=`${formatPrice(animal.price)} each`
+      li.mono=`${formatPrice(animal.numberInStock * animal.price)} total`
       li
         a(href=`/animals/${animal._id}/edit`) Edit
       li
         a(href=`/animals/${animal._id}/delete`) Delete
   if !animal
-    h1 Animal Not Found
+    h2 Animal Not Found
     ul
       li No animal found with requested id #{id}

@@ -1,11 +1,12 @@
 extends layout
 
 block content
-  h1=title
+  h2=title
   ul
     each category in categories
       li
         a(href=category.url)=category.name
-        span=`(${category.animalCount} species in stock)`
+        span.mono
+          i=`(${category.animalCount} species in stock)`
     else
-      li
+      li No categories available

@@ -2,7 +2,7 @@ extends layout
 
 block content
   if category
-    h1=category.name
+    h2=category.name
     div=category.description
     ul
       li
@@ -18,6 +18,6 @@ block content
         else
           li='No animals in stock'
   else
-    h1 No Category Found
+    h2 No Category Found
     ul
       li No category with requested id #{id}

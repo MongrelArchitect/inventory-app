@@ -2,7 +2,7 @@ extends layout
 
 block content
   if !id 
-    h1=title
+    h2=title
     form(action='' method='POST')
       ul
         div Fields marked with * are required
@@ -22,6 +22,7 @@ block content
             textarea(
               id='description'
               name='description'
+              rows='4'
             )=category ? category.description : ''
             div.error=errors && errors.description ? errors.description.msg : ''
         if editing
@@ -37,5 +38,5 @@ block content
           div.error=errors && errors.id ? errors.id.msg : ''
           button(type='submit') Submit
   else
-    h1 No Category Found
+    h2 No Category Found
     div No category with requested id #{id}

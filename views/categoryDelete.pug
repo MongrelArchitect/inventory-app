@@ -2,7 +2,7 @@ extends layout
 
 block content
   if !id
-    h1=`Delete "${category.name}" Category`
+    h2=`Delete "${category.name}" Category`
     if animals.length
       p Delete the following animals before attempting to delete this category:
       ul
@@ -28,5 +28,5 @@ block content
         div=errors && errors.password ? errors.password.msg : ''
         button(type='submit')=`Delete ${category.name}`
   else
-    h1 Category Not Found
+    h2 Category Not Found
     div No category found with id #{id}

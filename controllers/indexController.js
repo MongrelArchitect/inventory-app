@@ -21,9 +21,8 @@ exports.getIndex = asyncHandler(async (req, res, next) => {
   res.render('index', {
     animalCount,
     categoryCount,
-    description: 'Your premier source for live invertebrates of all kinds!',
+    description: 'The premier source for live invertebrates.',
     speciesCount,
-    title: 'The Invertebratorium',
     totalValue,
   });
 });

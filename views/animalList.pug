@@ -1,12 +1,12 @@
 extends layout
 
 block content
-  h1=title
+  h2=title
   ul
     each animal in animals
       li
         a(href=animal.url)=animal.commonName
     else
       li='no animals found'
-  div=`${getTotalAnimals(animals).toLocaleString()} in stock`
-  div=`${formatPrice(getTotalValue(animals))} total`
+    li.mono=`${getTotalAnimals(animals).toLocaleString()} in stock`
+    li.mono=`${formatPrice(getTotalValue(animals))} total`

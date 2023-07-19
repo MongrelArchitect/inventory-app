@@ -2,7 +2,7 @@ extends layout
 
 block content
   if !id
-    h1=`Delete ${animal.commonName}`
+    h2=`Delete ${animal.commonName}`
       div=`(${animal.speciesName})`
       p Are you sure? Enter admin password to confirm.
     form(method='POST' action='')
@@ -21,5 +21,5 @@ block content
       div=errors && errors.password ? errors.password.msg : ''
       button(type='submit')=`Delete ${animal.speciesName}`
   else
-    h1 Animal Not Found
+    h2 Animal Not Found
     div No animal found with id #{id}
