@@ -144,7 +144,7 @@ exports.postDeleteAnimal = [
       return false;
     }),
 
-  body('password', 'Admin password required')
+  body('password', 'Incorrect admin password')
     .custom((value) => {
       if (value === process.env.PASSWORD) return true;
       return false;
@@ -238,7 +238,7 @@ exports.postEditAnimal = [
     .escape()
     .isInt({ min: 0 }),
 
-  body('password', 'Admin password required')
+  body('password', 'Incorrect admin password')
     .custom((value) => {
       if (value === process.env.PASSWORD) return true;
       return false;

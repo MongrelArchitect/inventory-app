@@ -3,6 +3,7 @@ extends layout
 block content
   if !id
     script(src='/javascripts/editImage.js' defer='true')
+    script(src='/javascripts/validateAnimalForm.js' defer='true')
     h2=title
     form(action='' enctype='multipart/form-data' method='POST')
       ul
@@ -17,7 +18,9 @@ block content
               type='text' 
               value=animal && animal.commonName || ''
             )
-            div.error=errors && errors.commonName ? errors.commonName.msg : ''
+            div#commonNameError(
+              class=errors && errors.commonName ? 'error' : 'error hidden'
+            )=errors && errors.commonName ? errors.commonName.msg : 'error'
         li
           label(for='speciesName') *Species Name:
             input(
@@ -28,7 +31,9 @@ block content
               type='text' 
               value=animal && animal.speciesName || ''
             )
-            div.error=errors && errors.speciesName ? errors.speciesName.msg : ''
+            div#speciesNameError(
+              class=errors && errors.speciesName ? 'error' : 'error hidden'
+            )=errors && errors.speciesName ? errors.speciesName.msg : 'error'
         li
           label(for='description') Description:
             textarea(
@@ -36,7 +41,9 @@ block content
               id='description'
               name='description'
             )=animal && animal.description || ''
-            div.error=errors && errors.description ? errors.description.msg : ''
+            div#descriptionError(
+              class=errors && errors.description ? 'error' : 'error hidden'
+            )=errors && errors.description ? errors.description.msg : 'error'
         li
           label(for='category') *Category:
             if categories.length
@@ -72,7 +79,9 @@ block content
             else
               div No categories found. Please
               a(href='/categories/new') create a new category
-            div.error=errors && errors.category ? errors.category.msg : ''
+            div#categoryError(
+              class=errors && errors.category ? 'error' : 'error hidden'
+            )=errors && errors.category ? errors.category.msg : 'error'
         li
           label(for='price') *Price Per Individual:
             input(
@@ -84,7 +93,9 @@ block content
               type='number'
               value=animal && animal.price || 0
             )
-            div.error=errors && errors.price ? errors.price.msg : ''
+            div#priceError(
+              class=errors && errors.price ? 'error' : 'error hidden'
+            )=errors && errors.price ? errors.price.msg : 'error'
         li
           label(for='numberInStock') *Number In Stock:
             input(
@@ -101,11 +112,15 @@ block content
               //- using var since const would be block scoped
               - var stockError = errors.numberInStock
             - }
-            div.error=errors && stockError ? stockError.msg : ''
+            div#numberInStockError(
+              class=errors && stockError ? 'error' : 'error hidden'
+            )=errors && stockError ? stockError.msg : 'error'
         li
           //- tells the server if user changed the image - frontend script
           //- changes value to '1' if user has clicked to delete or change image
-          input(class='changed' name='imageChanged' type='hidden' value='0')
+          input#changed(
+            class='changed' name='imageChanged' type='hidden' value='0'
+          )
           div Current Image:
           if animal && animal.image
             div.filename=animal.image
@@ -113,6 +128,9 @@ block content
           else
             div.filename None
             img.preview(alt='No image' src='/images/no-image.svg')
+          div#imageError(
+            class=errors && imageError ? 'error' : 'error hidden'
+          )=errors && imageError ? imageError.msg : 'error'
           label.edit-image-label(
             for=editing ? 'image-editing' : 'image' tabindex='0'
           ) Upload Image
@@ -136,10 +154,17 @@ block content
                 required
                 type='password'
               )
-              div.error=errors && errors.password ? errors.password.msg : ''
+              div#passwordError(
+                class=errors && errors.password ? 'error' : 'error hidden'
+              )=errors && errors.password ? errors.password.msg : ''
         li
-          div.error=errors && errors.id ? errors.id.msg : ''
-          button(type='submit') Submit
+          div#idError(
+            class=errors && errors.id ? 'error' : 'error hidden'
+          )=errors && errors.id ? errors.id.msg : 'error'
+          button#submit(
+            disabled='true'
+            type='submit'
+          ) Submit
   else
     h2 No Animal Found
     div No animal with id #{id}

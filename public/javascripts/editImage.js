@@ -32,6 +32,7 @@ deleteButton.addEventListener('click', () => {
   imageInput.setAttribute('id', 'image');
   imageInput.setAttribute('name', 'image');
   imageInput.value = '';
+  imageInput.dispatchEvent(new Event('change'));
   preview.src = '/images/no-image.svg';
   filename.textContent = 'None';
   deleteButton.classList.add('hidden');

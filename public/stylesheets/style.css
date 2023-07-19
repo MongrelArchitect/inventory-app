@@ -2,7 +2,6 @@
 
 * {
   box-sizing: border-box;
-  flex-wrap: wrap;
 }
 
 a {
@@ -21,6 +20,11 @@ body {
   font-size: 1.2rem;
   font-family: "Noto Sans", Arial, sans-serif;
   line-height: 1.1;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  background: #ccc;
 }
 
 article {
@@ -172,6 +176,18 @@ ul {
   padding-top: 16px;
 }
 
+.error {
+  background: #b50800;
+}
+
+.error,
+.valid {
+  color: #eee;
+  font-family: "Noto Sans", Arial, sans-serif;
+  font-size: 1rem;
+  padding: 8px;
+}
+
 .hidden {
   visibility: hidden;
 }
@@ -182,6 +198,10 @@ ul {
 
 .preview {
   height: 200px;
+}
+
+.valid {
+  background: #00b508;
 }
 
 @media (min-width: 600px) {

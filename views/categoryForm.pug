@@ -16,7 +16,9 @@ block content
               type='text'
               value=category ? category.name : ''
             )
-            div.error=errors && errors.name ? errors.name.msg : ''
+            div(
+              class=errors && errors.name ? 'error' : 'error hidden'
+            )=errors && errors.name ? errors.name.msg : ''
         li
           label(for='description') Description:
             textarea(
@@ -24,7 +26,9 @@ block content
               name='description'
               rows='4'
             )=category ? category.description : ''
-            div.error=errors && errors.description ? errors.description.msg : ''
+            div(
+              class=errors && errors.description ? 'error' : 'error hidden'
+            )=errors && errors.description ? errors.description.msg : ''
         if editing
           li
             label(for='password') *Admin password 
@@ -33,9 +37,13 @@ block content
                 name='password'
                 type='password'
               )
-              div.error=errors && errors.password ? errors.password.msg : ''
+              div(
+                class=errors && errors.password ? 'error' : 'error hidden'
+              )=errors && errors.password ? errors.password.msg : ''
         li
-          div.error=errors && errors.id ? errors.id.msg : ''
+          div(
+            class=errors && errors.id ? 'error' : 'error hidden'
+          )=errors && errors.id ? errors.id.msg : ''
           button(type='submit') Submit
   else
     h2 No Category Found
