@@ -2,6 +2,7 @@ extends layout
 
 block content
   if !id 
+    script(src='/javascripts/validateCategoryForm.js' defer='true')
     h2=title
     form(action='' method='POST')
       ul
@@ -16,9 +17,9 @@ block content
               type='text'
               value=category ? category.name : ''
             )
-            div(
+            div#nameError(
               class=errors && errors.name ? 'error' : 'error hidden'
-            )=errors && errors.name ? errors.name.msg : ''
+            )=errors && errors.name ? errors.name.msg : 'error'
         li
           label(for='description') Description:
             textarea(
@@ -35,16 +36,17 @@ block content
               input(
                 id='password'
                 name='password'
+                required
                 type='password'
               )
-              div(
+              div#passwordError(
                 class=errors && errors.password ? 'error' : 'error hidden'
-              )=errors && errors.password ? errors.password.msg : ''
+              )=errors && errors.password ? errors.password.msg : 'error'
         li
-          div(
+          div#submitError(
             class=errors && errors.id ? 'error' : 'error hidden'
-          )=errors && errors.id ? errors.id.msg : ''
-          button(type='submit') Submit
+          )=errors && errors.id ? errors.id.msg : 'error'
+          button#submit(disabled type='submit') Submit
   else
     h2 No Category Found
     div No category with requested id #{id}

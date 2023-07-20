@@ -85,7 +85,7 @@ const validate = () => {
       descriptionError.textContent = 'Looks good!';
     } else {
       descriptionError.className = 'error';
-      descriptionError.textContent = '5 characters minimum';
+      descriptionError.textContent = 'Invalid description';
     }
     allowSubmitIfAllValid();
   });

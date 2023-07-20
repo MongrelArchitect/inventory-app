@@ -93,7 +93,7 @@ exports.postCategoryEdit = [
 
   body('description').optional().trim().escape(),
 
-  body('password', 'Admin password required').custom((value) => {
+  body('password', 'Incorrect password').custom((value) => {
     if (value === process.env.PASSWORD) return true;
     return false;
   }),
