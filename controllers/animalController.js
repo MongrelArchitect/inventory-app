@@ -5,7 +5,6 @@ const { ObjectId } = require('mongoose').Types;
 const multer = require('multer');
 const Animal = require('../models/animal');
 const Category = require('../models/category');
-require('../models/category');
 
 const deleteFile = (filePath) => {
   fs.unlink(filePath, (err) => {
