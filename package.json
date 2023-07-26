@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon --inspect ./bin/www",
-    "serve": "DEBUG=inventory-app:* npm run start"
+    "start": "node ./bin/www",
+    "serve": "DEBUG=inventory-app:* nodemon --inspect ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -20,6 +20,7 @@
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.0",
     "eslint": "^8.44.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.8.0",
