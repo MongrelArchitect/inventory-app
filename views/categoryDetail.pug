@@ -3,6 +3,8 @@ extends layout
 block content
   if category
     h2=category.name
+    if alreadyExists
+      h3.error Category already in database
     div=category.description
     ul
       li

@@ -74,8 +74,13 @@ exports.animalDetail = asyncHandler(async (req, res, next) => {
       'category',
       'name url',
     );
-    // need id parameter if we got a valid id but no animial found
-    res.render('animalDetail', { animal, formatPrice, id: req.params.id });
+    res.render('animalDetail', {
+      animal,
+      alreadyExists: req.query.alreadyExists,
+      formatPrice,
+      // need id parameter if we got a valid id but no animial found
+      id: req.params.id,
+    });
   } else {
     // invalid id in the url
     res.render('animalDetail', { id: req.params.id });
@@ -143,11 +148,10 @@ exports.postDeleteAnimal = [
       return false;
     }),
 
-  body('password', 'Incorrect admin password')
-    .custom((value) => {
-      if (value === process.env.PASSWORD) return true;
-      return false;
-    }),
+  body('password', 'Incorrect admin password').custom((value) => {
+    if (value === process.env.PASSWORD) return true;
+    return false;
+  }),
 
   // process reques after validation
   asyncHandler(async (req, res, next) => {
@@ -237,11 +241,10 @@ exports.postEditAnimal = [
     .escape()
     .isInt({ min: 0 }),
 
-  body('password', 'Incorrect admin password')
-    .custom((value) => {
-      if (value === process.env.PASSWORD) return true;
-      return false;
-    }),
+  body('password', 'Incorrect admin password').custom((value) => {
+    if (value === process.env.PASSWORD) return true;
+    return false;
+  }),
 
   // process request after validation
   asyncHandler(async (req, res, next) => {
@@ -419,7 +422,8 @@ exports.postNewAnimalForm = [
           // temp image not needed, so delete it
           deleteFile(req.file.path);
         }
-        res.redirect(animalExists.url);
+        // query string to tell controller to display "already exists" message
+        res.redirect(`${animalExists.url}?alreadyExists=true`);
       } else {
         // make sure we weren't given a legit-looking but bogus category _id
         const legitCategory = await Category.findById(animal.category);

@@ -3,6 +3,8 @@ extends layout
 block content
   if animal
     h2=animal.commonName
+    if alreadyExists
+      h3.error Species already in database
     ul
       li
         i=animal.speciesName

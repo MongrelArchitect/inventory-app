@@ -22,7 +22,12 @@ exports.categoryDetail = asyncHandler(async (req, res, next) => {
       Animal.find({}).where({ category: req.params.id }),
     ]);
     // need id parameter if we got a valid id but no animial found
-    res.render('categoryDetail', { animals, category, id: req.params.id });
+    res.render('categoryDetail', {
+      alreadyExists: req.query.alreadyExists,
+      animals,
+      category,
+      id: req.params.id,
+    });
   } else {
     // invalid id in the url
     res.render('categoryDetail', { id: req.params.id });
@@ -242,7 +247,7 @@ exports.postNewCategoryForm = [
         .collation({ locale: 'en', strength: 1 });
       if (categoryExists) {
         // already in our inventory, redirect to its detail page
-        res.redirect(categoryExists.url);
+        res.redirect(`${categoryExists.url}?alreadyExists=true`);
       } else {
         // save our new category and redirect to its detail page
         await category.save();
