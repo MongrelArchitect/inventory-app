@@ -249,12 +249,16 @@ exports.postEditAnimal = [
     // extract any errors
     const errors = validationResult(req);
 
+    // use the original image (if any) for re-rendering with errors
+    const originalAnimal = await Animal.findById(req.params.id, 'image');
+
     // create an animal object with escaped and trimmed data
     const animal = new Animal({
       _id: req.params.id,
       category: req.body.category,
       commonName: req.body.commonName,
       description: req.body.description,
+      image: originalAnimal.image,
       numberInStock: +req.body.numberInStock,
       price: +req.body.price,
       speciesName: req.body.speciesName,
