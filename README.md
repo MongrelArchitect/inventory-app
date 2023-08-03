@@ -18,4 +18,12 @@ live invertebrates.
 - Handling file uploads
 - Deployment to production
 
-[Live Demo](https://still-brook-1613.fly.dev/)
+## Admin Password
+For editing or deleting database entries
+```
+GoodTimes123#
+```
+
+## Live Demo
+
+[Check it out](https://still-brook-1613.fly.dev/)
