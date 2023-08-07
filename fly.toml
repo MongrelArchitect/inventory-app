@@ -1,10 +1,12 @@
-# fly.toml app configuration file generated for still-brook-1613 on 2023-07-26T14:03:19-07:00
+# fly.toml app configuration file generated for withered-sky-7506 on 2023-08-07T15:48:29-07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "still-brook-1613"
+app = "withered-sky-7506"
 primary_region = "lax"
+
+[build]
 
 [http_service]
   internal_port = 3000
@@ -15,5 +17,5 @@ primary_region = "lax"
   processes = ["app"]
 
 [mounts]
-  source = "inventory_images"
-  destination = "/"
+  source="inventory_images"
+  destination="/app/public/images"

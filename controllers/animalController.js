@@ -28,7 +28,7 @@ const getTotalValue = (animals) => animals.reduce((acc, curr) => {
 }, 0);
 
 const moveFile = (filename) => {
-  const oldPath = `temp/${filename}`;
+  const oldPath = `public/images/temp/${filename}`;
   const newPath = `public/images/${filename}`;
   fs.rename(oldPath, newPath, (err) => {
     if (err) console.error(err);
@@ -37,7 +37,7 @@ const moveFile = (filename) => {
 
 const upload = multer({
   storage: multer.diskStorage({
-    destination: 'temp/',
+    destination: 'public/images/temp/',
     filename: function createFilename(req, file, cb) {
       cb(null, `${Date.now()}-${file.originalname}`);
     },

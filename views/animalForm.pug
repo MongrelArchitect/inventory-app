@@ -127,7 +127,7 @@ block content
             img.preview(alt=animal.commonName src=`/images/${animal.image}`)
           else
             div.filename None
-            img.preview(alt='No image' src='/images/no-image.svg')
+            img.preview(alt='No image' src='/icons/no-image.svg')
           div#imageError(
             class=errors && imageError ? 'error' : 'error hidden'
           )=errors && imageError ? imageError.msg : 'error'
